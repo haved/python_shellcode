@@ -11,5 +11,4 @@ call(["gcc", "-I/usr/include/python3.8/", "-c", "queuemodule.c", "-o", "queuemod
 call(["objcopy", "--only-section=.text", "-O", "binary", "queuemodule.o", "text.o"])
 with open("text.o", "rb") as fil:
     with open("text.py", "w") as ut:
-        for line in fil:
-            ut.write(str(line))
+        ut.write(str(fil.read()))
