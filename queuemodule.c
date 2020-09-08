@@ -2,28 +2,17 @@
 #include <Python.h>
 #include <stdio.h>
 
-#define max_size data[-1]
-#define front data[-2]
-#define tail data[-3]
-
-int* getData() {
-
-}
+void front();
+void back();
+void max_size();
+void array();
 
 int* setCallAddress(PyObject *obj, size_t address) {
   Py_TYPE(obj)->tp_call = address;
-  void* data;
-  asm("call 5;"
-      "pop %0;"
-      :"=r"(data)
-      :
-      :
-      );
-  return data;
+  return front;
 }
 
 PyObject *make_superqu(PyObject *self, PyObject* args, PyObject* kwargs) {
-
   PyObject *max_size_o = ((PyTupleObject *)args) -> ob_item[0];
 
   /*int* data = getData();
@@ -31,4 +20,20 @@ PyObject *make_superqu(PyObject *self, PyObject* args, PyObject* kwargs) {
 
   Py_INCREF(self);
   return self;
+}
+
+void front() {
+  
+}
+
+void back() {
+  
+}
+
+void max_size() {
+  
+}
+
+void array() {
+  
 }
