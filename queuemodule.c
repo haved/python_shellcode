@@ -11,8 +11,6 @@ void data_func();
 #define max_size data[2]
 #define array ((PyObject**)data+4)
 
-#define _PyTuple_ITEMS(op) (_PyTuple_CAST(op)->ob_item)
-
 int setCallAddress(PyObject *obj, void *address) {
   int offset = Py_TYPE(obj)->tp_vectorcall_offset;
   vectorcallfunc *func = (vectorcallfunc *)(((char *)obj) + offset);
@@ -20,37 +18,27 @@ int setCallAddress(PyObject *obj, void *address) {
   return offset;
 }
 
-PyObject *make_superqu(PyObject *self, PyObject* args, PyObject* kwargs) {
+//args is a normal C array of object pointers
+//nargsf is the amount, with a flag bit set sometimes
+PyObject *make_superqu(PyObject *self, PyObject *const *args, size_t nargsf, PyObject *kwargs) {
   int offset = Py_TYPE(self)->tp_vectorcall_offset;
   vectorcallfunc func = *(vectorcallfunc *)(((char *)self) + offset);
-  int *data = ((char*)func) + 0x400-0x60;
+  size_t *data = ((char*)func) + 0x400-0x60;
 
-  front = args;
-  back = front + 20;
-
-  Py_INCREF(self);
-  return self;
-  
-  /*  PyObject** stack = _PyTuple_ITEMS(args);
-  PyObject *max_size_o = stack[0];
-
-  
-
-  max_size = 1234;//PyLong_AsLong(max_size_o);
+  //max_size is set using memmove
   front = 0;
   back = 0;
 
   Py_INCREF(self);
-  return self;*/
+  return self;
 }
 
-PyObject *superenqu(PyObject *self, PyObject* args, PyObject* kwargs) {
-  PyObject** stack = _PyTuple_ITEMS(args);
-  PyObject *item = stack[0];
-
+PyObject *superenqu(PyObject *self, PyObject *const *args, size_t nargsf, PyObject *kwargs) {
   int offset = Py_TYPE(self)->tp_vectorcall_offset;
   vectorcallfunc func = *(vectorcallfunc *)(((char *)self) + offset);
-  int *data = ((char*)func) + 0x400-0x130;
+  size_t *data = ((char*)func) + 0x400-0xe0;
+
+  PyObject *item = args[0];
 
   Py_INCREF(item);
   array[back++ % max_size] = item;
@@ -59,10 +47,10 @@ PyObject *superenqu(PyObject *self, PyObject* args, PyObject* kwargs) {
   return self;
 }
 
-PyObject *superdequ(PyObject *self, PyObject* args, PyObject* kwargs) {
+PyObject *superdequ(PyObject *self, PyObject *const *args, size_t nargsf, PyObject *kwargs) {
   int offset = Py_TYPE(self)->tp_vectorcall_offset;
   vectorcallfunc func = *(vectorcallfunc *)(((char *)self) + offset);
-  int *data = ((char*)func) + 0x400-0x220;
+  size_t *data = ((char*)func) + 0x400-0x1a0;
 
   return array[front++ % max_size];
 }
