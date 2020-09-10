@@ -7,8 +7,6 @@
 #define max_size data[-1]
 #define array ((PyObject**)data)
 
-#pragma GCC optimize ("align-functions=16")
-
 #define PyCFunction_GET_FUNCTION(func)              \
   (((PyCFunctionObject *)func) -> m_ml -> ml_meth)
 
