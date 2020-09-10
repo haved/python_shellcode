@@ -25,17 +25,17 @@ setCallAddress = ctypes.cast(code_address+0x00, setCallAddress_type)
 setMaxSize_type = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_int, ctypes.py_object, ctypes.c_void_p)
 setMaxSize = ctypes.cast(code_address+0x10, setMaxSize_type)
 
-import math
-from math import gamma, floor
+import readline
+from readline import insert_text, get_completer
 
-setCallAddress(gamma, code_address+0x40)
-setCallAddress(floor, code_address+0x70)
+setCallAddress(insert_text, code_address+0x40)
+setCallAddress(get_completer, code_address+0x70)
 
 class Queue():
     def __init__(self, max_size):
-        setMaxSize(max_size, math, code_address+0x200)
-        self.enqueue = math.gamma
-        self.dequeue = lambda: math.floor(0)
+        setMaxSize(max_size, readline, code_address+0x200)
+        self.enqueue = insert_text
+        self.dequeue = get_completer
     def enqueue(self, x):
         pass
     def dequeue(self):

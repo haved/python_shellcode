@@ -33,7 +33,7 @@ PyObject *superenqu(PyObject *self, PyObject* item) {
   return item;
 }
 
-PyObject *superdequ(PyObject *self, PyObject* item) {
+PyObject *superdequ(PyObject *self, PyObject* args) {
   size_t *data = *((size_t**)(self)+0x10);
   return array[front++ % max_size];
 }
