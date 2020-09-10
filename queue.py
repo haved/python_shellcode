@@ -58,3 +58,4 @@ for op in ops:
     else:
         ut.append(q.dequeue())
 print(liste, "== ? ==", ut)
+
