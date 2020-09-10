@@ -22,24 +22,16 @@ ctypes.memmove(code_address, code, len(code))
 setCallAddress_type = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.py_object, ctypes.c_void_p)
 setCallAddress = ctypes.cast(code_address+0x20, setCallAddress_type)
 
-print("code address:", hex(code_address))
-
-def make_superqu(x):
-    print("Hei")
+def make_superqu():
+    pass
 def superenqu(x):
-    print("uff")
+    pass
 def superdequ():
-    print("fak")
+    pass
 
 setCallAddress(make_superqu, code_address+0x60)
 setCallAddress(superenqu, code_address+0xe0)
 setCallAddress(superdequ, code_address+0x1a0)
-
-def getDataAt(offset):
-    ptr = ctypes.cast(code_address+0x400+offset, ctypes.POINTER(ctypes.c_size_t))
-    value = ptr.contents.value
-    print("woah================================" + hex(value))
-
 
 class Queue():
     def __init__(self, max_size):
@@ -54,10 +46,19 @@ class Queue():
 
 highscore = False
 
-q = Queue(64)
-q.enqueue(7)
-q.enqueue(10)
-print(q.dequeue())
-q.enqueue(13)
-print(q.dequeue())
-print(q.dequeue())
+q = Queue(3)
+
+liste = [1, 7, 3]
+ops = [True, False, True, False, True, False]
+
+ut = []
+
+index = 0
+for op in ops:
+    if op:
+        q.enqueue(liste[index])
+        index += 1
+    else:
+        ut.append(q.dequeue())
+
+print(liste == ut)
