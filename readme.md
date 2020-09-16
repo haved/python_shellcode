@@ -1,5 +1,5 @@
 
-# My attempt to make a queue in C and inject it into python
+# My attempt at making a queue in C and injecting it into python
 The c code is compiled into a byte object that python then places into an
 exectuable and writeable mmapped block.
 
