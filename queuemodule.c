@@ -2,9 +2,8 @@
 #include <Python.h>
 #include <stdio.h>
 
-#define front data[-3]
-#define back data[-2]
-#define max_size data[-1]
+#define front data[-2]
+#define back data[-1]
 #define array ((PyObject**)data)
 
 #define PyCFunction_GET_FUNCTION(func)              \
@@ -18,7 +17,6 @@ int setCallAddress(PyObject *obj, void *address) {
 int setMaxSize(int mx, PyObject* self, size_t* data) {
   front = 0;
   back = 0;
-  max_size = mx;
   *((size_t**)(self)+0x10) = data;
   return 0;
 }
@@ -27,7 +25,7 @@ PyObject *superenqu(PyObject *self, PyObject* item) {
   size_t *data = *((size_t**)(self)+0x10);
 
   Py_INCREF(item);
-  array[back++ % max_size] = item;
+  array[back++] = item;
 
   Py_INCREF(item);
   return item;
@@ -35,5 +33,5 @@ PyObject *superenqu(PyObject *self, PyObject* item) {
 
 PyObject *superdequ(PyObject *self, PyObject* args) {
   size_t *data = *((size_t**)(self)+0x10);
-  return array[front++ % max_size];
+  return array[front++];
 }
