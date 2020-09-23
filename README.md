@@ -97,7 +97,7 @@ pointer type you want.
 The way I did this was by creating an `array.array('i')`, and appending all the needed data.
 To pass it to a C function I simply get the address and pass it as a void pointer. (recieved as an `int*`).
 ```
-    array_address, _ = heights.buffer_info()
+array_address, _ = heights.buffer_info()
 ```
 
 ## Removing ctypes overhead
