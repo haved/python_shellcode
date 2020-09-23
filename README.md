@@ -87,7 +87,7 @@ Now we can call `cuboid_function` as a regular python function that takes three 
 Our call to mmap takes a size, but is not guarranteed to be of that size.
 If you need a big block of working memory, I suggest using
 ```
-data_address = ctypes.cast(ctypes.create_string_buffer(DATA_SIZE),ctypes.POINTER(ctypes.c_void_p))
+data_address = ctypes.cast(ctypes.create_string_buffer(DATA_SIZE), ctypes.c_void_p)
 ```
 This will allocate a buffer of size `DATA_SIZE` bytes, and cast it to a void pointer.
 This value can now be passed to any function that takes a `int* data`, or whatever other
