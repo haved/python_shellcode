@@ -81,6 +81,8 @@ int string_match(char* dna, int dnalen, char* segments, int segment_count, void*
   return score;
 }
 
+//#include <stdio.h>
 int main()
 {
+  //printf("%d\n", sizeof(Node));
 }

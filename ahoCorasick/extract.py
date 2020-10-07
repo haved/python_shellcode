@@ -3,7 +3,7 @@
 from subprocess import call
 import base64
 
-call(["gcc", "ahoc.c", "-o", "ahoc.o"])
+call(["gcc", "-O2", "ahoc.c", "-o", "ahoc.o"])
 call(["objcopy", "--only-section=.text", "-O", "binary", "ahoc.o", "text.o"])
 with open("text.o", "rb") as fil:
     with open("text.py", "w") as ut:
