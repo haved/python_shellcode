@@ -6,6 +6,11 @@ in a setting where one is only allowed to submit a single python file.
 I am running Linux, and the target server is as well.
 I have no idea how this would be on Windows, but you probably don't get `mmap` from `libc`.
 
+I have done this 3 times:
+ - `poolPrism/` is a O(n⁴) algorithm on a two-dimensional array, passed to C via `array.array`.
+ - `queue/` is a queue implementaton, special because it hacks into python built-ins to avoid ctypes overhead.
+ - `ahoCorasick/` counts occurances of several needles in a haystack string. Does recursion in C, so uses linking.
+
 ## Running machine code in Python
 This is accomplished through allocating a block of memory using `mmap`,
 accessed through the python library `ctypes`.
@@ -46,9 +51,18 @@ This means function calls don't work from one function to another,
 and standard libraries / Python libraries are not accessible.
 You can probably hack around this, but I recommend using macros for most things.
 
+EDIT: Linking is actually not that bad, just remove `-c` from the command, and add an empty `main()` function.
+This doesn't give you access to libc as far as I can see, but at least you can call your own functions.
+When exporting the text section, note that it starts at `0x1020` or someting,
+so remove that from the offset provided by `objdump`. See Aho-Corasick.
+
+EDIT: Sometimes `-O3` is a bit too eager to unroll loops, and degrades performance.
+`-O2` at least never seems to be worse than no optimization.
+
 You can not use global variables either, but local variables work fine.
 Keep in mind that string literals might be lost when copying the `.text` section.
-My general tip is to pass a common data pointer as a parameter to every function.
+My general tip is to pass a common data pointer as a parameter to every function,
+or use pointers in your data structures. See my Aho-Corasick.
 
 ## Exporting machine code to python
 After compiling, check at what offsets of `.text` your function(s) start at.
@@ -93,11 +107,27 @@ This will allocate a buffer of size `DATA_SIZE` bytes, and cast it to a void poi
 This value can now be passed to any function that takes a `int* data`, or whatever other
 pointer type you want.
 
+If you need to clear the memory between different runs of your c-function,
+I found it easiest to do it from python:
+```
+ctypes.memset(data_address, 0, DATA_SIZE)
+```
+
 ## Passing arrays from python to C
 The way I did this was by creating an `array.array('i')`, and appending all the needed data.
 To pass it to a C function I simply get the address and pass it as a void pointer. (recieved as an `int*`).
 ```
 array_address, _ = heights.buffer_info()
+```
+
+You can also pass byte arrays to c simply by passing them. Great if you want to send a string.
+On the c side you simply recieve a `char*`. I assume ctypes does something behind the scenes to make it work,
+so you should probably be specific when you describe the function's signature, e.g. `ctypes.c_char_p` works.
+```
+dna_buf = dna.encode('utf-8')
+
+return string_match_c(dna_buf, ...)
+
 ```
 
 ## Removing ctypes overhead
